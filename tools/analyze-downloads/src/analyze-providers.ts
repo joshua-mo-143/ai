@@ -34,6 +34,7 @@ async function main() {
     '@ai-sdk/replicate',
     '@ai-sdk/revai',
     '@ai-sdk/togetherai',
+    '@ai-sdk/venice',
     '@ai-sdk/vercel',
     '@ai-sdk/xai',
 

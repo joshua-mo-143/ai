@@ -1,0 +1,171 @@
+---
+title: Venice
+description: Learn how to use Venice models with the AI SDK.
+---
+
+# Venice Provider
+
+The [Venice](https://venice.ai) provider offers privacy-focused language,
+embedding, and image models through the Venice API.
+
+## Setup
+
+The Venice provider is available via the `@ai-sdk/venice` module:
+
+<InstallPackages packages="@ai-sdk/venice" />
+
+Set a `VENICE_API_KEY` environment variable and import the default provider:
+
+```ts
+import { venice } from '@ai-sdk/venice';
+```
+
+You can also create a customized provider instance:
+
+```ts
+import { createVenice } from '@ai-sdk/venice';
+
+const venice = createVenice({
+  apiKey: process.env.VENICE_API_KEY,
+  baseURL: 'https://api.venice.ai/api/v1',
+});
+```
+
+The provider accepts the following optional settings:
+
+- **apiKey** _string_
+
+  API key sent using the `Authorization` header. It defaults to the
+  `VENICE_API_KEY` environment variable.
+
+- **baseURL** _string_
+
+  Base URL for API calls. It defaults to `https://api.venice.ai/api/v1`.
+
+- **headers** _Record&lt;string, string&gt;_
+
+  Additional request headers.
+
+- **queryParams** _Record&lt;string, string&gt;_
+
+  Query parameters appended to request URLs.
+
+- **fetch** _(input: RequestInfo, init?: RequestInit) => Promise&lt;Response&gt;_
+
+  Custom fetch implementation.
+
+- **includeUsage** _boolean_
+
+  Include token usage in streaming responses. It defaults to `true`.
+
+## Language Models
+
+Create a Venice language model by passing any available text model ID:
+
+```ts
+import { venice } from '@ai-sdk/venice';
+import { generateText } from 'ai';
+
+const { text } = await generateText({
+  model: venice('venice-uncensored'),
+  prompt: 'Explain why privacy matters in simple terms.',
+});
+```
+
+The callable provider, `languageModel`, and `chatModel` all use Venice's
+`/chat/completions` endpoint.
+
+### Venice Parameters
+
+Use `providerOptions.venice` to enable Venice-specific features:
+
+```ts
+import { venice, type VeniceLanguageModelOptions } from '@ai-sdk/venice';
+import { generateText } from 'ai';
+
+const result = await generateText({
+  model: venice('venice-uncensored'),
+  prompt: 'What happened in AI news today?',
+  providerOptions: {
+    venice: {
+      veniceParameters: {
+        enableWebSearch: 'auto',
+        enableWebCitations: true,
+      },
+    } satisfies VeniceLanguageModelOptions,
+  },
+});
+```
+
+`veniceParameters` supports:
+
+- `enableWebSearch`: `'off' | 'on' | 'auto'`
+- `enableWebScraping`: enable scraping of URLs in the prompt
+- `enableWebCitations`: request web citations
+- `enableXSearch`: enable X and web search on supported models
+- `enableE2ee`: enable end-to-end encryption on supported models
+- `characterSlug`: use a Venice character
+- `stripThinkingResponse` and `disableThinking`: control model reasoning output
+- `includeVeniceSystemPrompt`: explicitly include or omit Venice's system prompt
+- `includeSearchResultsInStream` and `returnSearchResultsAsDocuments`: control
+  search-result delivery
+
+Other typed options include `maxCompletionTokens`, `minP`, `maxTemp`,
+`minTemp`, `repetitionPenalty`, `topLogprobs`, `logprobs`, `stopTokenIds`,
+`parallelToolCalls`, `promptCacheKey`, `promptCacheRetention`, and `reasoning`.
+
+### Reasoning
+
+Venice reasoning output is exposed through the standard AI SDK reasoning parts:
+
+```ts
+const { text, reasoningText } = await generateText({
+  model: venice('zai-org-glm-5-1'),
+  prompt: 'Prove that there are infinitely many primes.',
+  providerOptions: {
+    venice: {
+      reasoning: { effort: 'high' },
+    } satisfies VeniceLanguageModelOptions,
+  },
+});
+```
+
+### Structured Output and Tools
+
+Venice chat models support AI SDK structured output and function tools when the
+selected model has the corresponding capability. Model capabilities vary; see
+the [Venice model catalog](https://docs.venice.ai/models/overview).
+
+### Provider Metadata
+
+When returned by Venice, `providerMetadata.venice` contains `cost`,
+`webSearchCitations`, `reasoningDetails`, and `reasoningEncrypted`.
+
+## Embedding Models
+
+```ts
+import { venice } from '@ai-sdk/venice';
+import { embed } from 'ai';
+
+const { embedding } = await embed({
+  model: venice.embeddingModel('text-embedding-bge-m3'),
+  value: 'Privacy-first AI infrastructure',
+});
+```
+
+## Image Models
+
+```ts
+import { venice } from '@ai-sdk/venice';
+import { generateImage } from 'ai';
+
+const { image } = await generateImage({
+  model: venice.image('qwen-image'),
+  prompt: 'A city floating above the clouds',
+  size: '1024x1024',
+});
+```
+
+The image model uses Venice's OpenAI-compatible `/images/generations`
+endpoint. Venice-native image editing, upscaling, and advanced generation
+options are not exposed by this provider.

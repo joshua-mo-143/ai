@@ -34,6 +34,9 @@
       "path": "packages/bytedance"
     },
     {
+      "path": "packages/cartesia"
+    },
+    {
       "path": "packages/cerebras"
     },
     {
@@ -191,6 +194,9 @@
     },
     {
       "path": "packages/valibot"
+    },
+    {
+      "path": "packages/venice"
     },
     {
       "path": "packages/vercel"

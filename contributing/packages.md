@@ -31,6 +31,7 @@ When adding new packages under `packages`, please ensure they are added to `/tsc
 | `perplexity`        | `@ai-sdk/perplexity`        | Perplexity                  |
 | `replicate`         | `@ai-sdk/replicate`         | Replicate                   |
 | `togetherai`        | `@ai-sdk/togetherai`        | Together AI                 |
+| `venice`            | `@ai-sdk/venice`            | Venice                      |
 | `xai`               | `@ai-sdk/xai`               | xAI (Grok)                  |
 | `vercel`            | `@ai-sdk/vercel`            | Vercel AI                   |
 | `gateway`           | `@ai-sdk/gateway`           | AI Gateway                  |

@@ -127,6 +127,9 @@
       "path": "../../packages/klingai"
     },
     {
+      "path": "../../packages/langchain"
+    },
+    {
       "path": "../../packages/lmnt"
     },
     {
@@ -134,6 +137,9 @@
     },
     {
       "path": "../../packages/mcp"
+    },
+    {
+      "path": "../../packages/minimax"
     },
     {
       "path": "../../packages/mistral"
@@ -188,6 +194,9 @@
     },
     {
       "path": "../../packages/valibot"
+    },
+    {
+      "path": "../../packages/venice"
     },
     {
       "path": "../../packages/vercel"
